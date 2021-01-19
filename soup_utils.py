@@ -6,6 +6,8 @@ from logger import logger
 
 def download(url, file_name):
     try:
+        if not os.path.exists(os.path.dirname(file_name)):
+            os.makedirs(os.path.dirname(file_name), exist_ok=True)
         if os.path.exists(file_name):
             raise IOError(f'File exists : {file_name}')
         request.urlretrieve(url, file_name)
