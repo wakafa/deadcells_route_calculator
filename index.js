@@ -17,16 +17,15 @@ python.on('close', (code) => {
 });
 
 app.get('/', (req, res) => {
-    res.send("Welcome to Dead Cells Route Calculator!")
-
+    res.sendFile(path.join(__dirname, 'pages', 'welcome.html'))
 })
 
 
 app.get('/biomes_list', (req, res) => {
-    console.log("Hello")
     res.send(biomesList)
 })
 
 
+app.use(express.static(path.join(__dirname, 'scripts')))
 app.listen(port, () => console.log(`Example app listening on port 
 ${port}!`))
