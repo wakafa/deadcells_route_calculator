@@ -62,7 +62,6 @@ def get_all_biomes():
     update_spoiler_biomes(biomes)
     update_inaccessible_biomes(biomes)
     for biome in biomes:
-        print(biome.get("name"))
         if not biome.get('unused'):
             update_biome_data(biome)
     return biomes

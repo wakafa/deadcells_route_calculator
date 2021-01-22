@@ -28,12 +28,9 @@ def make_file_soup(file_name):
 
 
 def get_soup_body(soup):
-    print("getting soup body...")
     return soup.find('body')
 
 
 def get_body_contents_without_tags(body):
     contents_of_body_without_tags = body.findChildren(recursive=False)
-    print(len(contents_of_body_without_tags))
-    # print(str(contents_of_body_without_tags[2].encode('utf-8')))
     return contents_of_body_without_tags
