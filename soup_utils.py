@@ -9,7 +9,8 @@ def download(url, file_name):
         if not os.path.exists(os.path.dirname(file_name)):
             os.makedirs(os.path.dirname(file_name), exist_ok=True)
         if os.path.exists(file_name):
-            raise IOError(f'File exists : {file_name}')
+            logger.info(f'File exists : {file_name}')
+            return
         request.urlretrieve(url, file_name)
     except IOError as exception:
         logger.error(f'Could not download html : {exception}')
