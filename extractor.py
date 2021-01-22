@@ -33,24 +33,73 @@ def extract_by_keyword(res_set, keyword):
 
 
 def extract_entrances(raw_data):
-    relevant_text = extract_by_keyword(raw_data, "entrance")
+    relevant_element = extract_by_keyword(raw_data, "entrance")
+    entrances = []
+    if not relevant_element:
+        return entrances
+
+    for entrance in relevant_element.find_all("a"):
+        entrances.append({
+            "name": entrance.text,
+            "path": entrance.get('href')
+        })
+    return entrances
 
 
 def extract_exits(raw_data):
-    relevant_text = extract_by_keyword(raw_data, "exit")
+    relevant_element = extract_by_keyword(raw_data, "exit")
+    exits = []
+    if not relevant_element:
+        return exits
+
+    for exit_data in relevant_element.find_all("a"):
+        exits.append({
+            "name": exit_data.text,
+            "path": exit_data.get('href')
+        })
+    return exits
+
+
+def parse_scroll_data(data):
+    match = re.match(r'(\d)\D+(\d)?', data)
+    return match.group(1) or "0", match.group(2) or "0"
 
 
 def extract_scrolls(raw_data):
-    relevant_text = extract_by_keyword(raw_data, "scrolls")
+    relevant_element = extract_by_keyword(raw_data, "scrolls")
+    scrolls = {}
+    if not relevant_element:
+        return scrolls
+
+    power, dual = parse_scroll_data(relevant_element.div.text)
+    return{
+        "power": power,
+        "dual": dual
+    }
 
 
 def extract_scroll_frags(raw_data):
-    relevant_text = extract_by_keyword(raw_data, "frags")
+    relevant_element = extract_by_keyword(raw_data, "frags")
+    scroll_frags = "0"
+    if not relevant_element:
+        return scroll_frags
+
+    return relevant_element.div.text
 
 
 def extract_gear_level(raw_data):
-    relevant_text = extract_by_keyword(raw_data, "gear_level")
+    relevant_element = extract_by_keyword(raw_data, "gear_level")
+    gear_level = None
+    if not relevant_element:
+        return gear_level
+
+    return relevant_element.div.text
 
 
 def extract_cursed_chests(raw_data):
-    relevant_text = extract_by_keyword(raw_data, "cursed_chests")
+    relevant_element = extract_by_keyword(raw_data, "cursed_chests")
+    cursed_chests = "0%"
+    if not relevant_element:
+        return cursed_chests
+
+    return relevant_element.div.text

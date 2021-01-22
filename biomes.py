@@ -49,8 +49,6 @@ def update_biome_data(biome):
     for bcs in range(MAX_BC):
         raw_biome_bc_data = soup.find_all("div", {"data-source": re.compile(f'_{bcs}$')})
         biome["data"][bcs] = extract_stats_of_bc(raw_biome_bc_data)
-        print("===============")
-        # update_biome_bc_data(biome, i)
 
 
 def get_all_biomes():
@@ -63,7 +61,7 @@ def get_all_biomes():
     biomes = extract_biomes_names_and_paths(raw_biomes_titles)
     update_spoiler_biomes(biomes)
     update_inaccessible_biomes(biomes)
-    for biome in biomes[17:18]:
+    for biome in biomes:
         print(biome.get("name"))
         if not biome.get('unused'):
             update_biome_data(biome)
