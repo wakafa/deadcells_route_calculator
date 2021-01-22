@@ -2,9 +2,10 @@ const express = require('express')
 const { spawn } = require('child_process');
 const app = express()
 const port = 3000
+const path = require('path')
 
 let biomesList;
-const python = spawn('python', ['main.py']);
+const python = spawn('python', [path.join('data_gathering', 'main.py')]);
 
 python.stdout.on('data', data => {
     console.log('Pipe data from python script ...');
