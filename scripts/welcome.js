@@ -15,6 +15,7 @@ let biomesList = JSON.parse(httpGet('/biomes_list')).biomes
 let currentBiome
 let currentRoute = []
 
+let getBiomeByName = biomeName => biomesList.filter(biome => biome.name === biomeName)[0]
 let toggleSpoilers = () => {
     var spoilersButton = document.getElementById("spoilers-button")
     if (!showSpoilers) {
@@ -35,26 +36,53 @@ let get_entry_biome = () => {
     return biomesList.filter(b => b.data[0].entrances.length === 0)[0]
 }
 
-let display_route = () => {
-    let currBiomeData = currentRoute[0].data
-    console.log("XD")
-    console.log(currentBiome.name)
-    console.log(currentBiome.data)
-    let spoiles = {
-        scrolls: {
-            power: currentBiome.scrolls.power,
-            dual: currentBiome.scrolls.dual
-        }
-    }
-    console.log(currBiomeData)
-        // currentRoute.forEach(route => {
-        //     console.log(route.data[bcs])
-        // })
+let createExitButtons = exit => {
+    console.log(`Ceating exit button for ${exit.name}`)
+    let eButton = document.createElement("BUTTON")
+    let eText = document.createTextNode(exit.name)
+    eButton.appendChild(eText)
+    eButton.onclick = continue_route.bind(this, exit)
+    eButton.className = "exit-button"
+        // eButton.disabled = true
+    document.body.appendChild(eButton)
 }
 
-let start_route = () => {
+let display_route = () => {
+    let currentBiomeData = currentRoute[0].data
+    console.log(currentBiomeData)
+    let spoiles = {
+        scrolls: {
+            power: currentBiomeData[bcs].scrolls.power,
+            dual: currentBiomeData[bcs].scrolls.dual
+        },
+        cursed_chests: currentBiomeData[bcs].cursed_chests,
+        scroll_frags: currentBiomeData[bcs].scroll_frags,
+    }
+    currentBiomeData[bcs].exits.forEach(exit => {
+        createExitButtons(exit)
+    })
+    console.log(spoiles)
+}
+
+let disableAllExitButtons = () => {
+
+}
+let startOver = () => {
+
+}
+
+let startRoute = () => {
     currentBiome = get_entry_biome()
     document.getElementById("start-route").textContent = currentBiome.name
     currentRoute = [currentBiome]
     display_route()
+}
+
+let continue_route = biome => {
+    currentBiome = getBiomeByName(biome.name)
+    console.log(`Continuing ${biome.name}`)
+    console.log(`Continuing ${JSON.stringify(currentBiome)}`)
+    currentBiome.data[bcs].exits.forEach(exit => {
+        createExitButtons(exit)
+    })
 }

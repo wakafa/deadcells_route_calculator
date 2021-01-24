@@ -1,9 +1,10 @@
 const express = require('express')
 const { spawn } = require('child_process');
 const path = require('path')
-const fs = require('fs')
+const fs = require('fs');
 const app = express()
 const port = 3000
+
 
 const BIOMES_DIR = "Biomes"
 const python = spawn('python', [path.join('data_gathering', 'main.py')]);
