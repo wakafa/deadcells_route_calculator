@@ -37,7 +37,7 @@ let get_entry_biome = () => {
 }
 
 let createExitButtons = exit => {
-    console.log(`Ceating exit button for ${exit.name}`)
+    if (getBiomeByName(exit.name).spoiler && !showSpoilers) return
     let eButton = document.createElement("BUTTON")
     let eText = document.createTextNode(exit.name)
     eButton.appendChild(eText)
@@ -47,42 +47,67 @@ let createExitButtons = exit => {
     document.body.appendChild(eButton)
 }
 
-let display_route = () => {
-    let currentBiomeData = currentRoute[0].data
-    console.log(currentBiomeData)
+let calculateRouteSpoiles = route => {
     let spoiles = {
         scrolls: {
-            power: currentBiomeData[bcs].scrolls.power,
-            dual: currentBiomeData[bcs].scrolls.dual
+            power: parseInt(route[0].data[bcs].scrolls.power),
+            dual: parseInt(route[0].data[bcs].scrolls.dual)
         },
-        cursed_chests: currentBiomeData[bcs].cursed_chests,
-        scroll_frags: currentBiomeData[bcs].scroll_frags,
+        cursed_chests: route[0].data[bcs].cursed_chests,
+        scroll_frags: parseInt(route[0].data[bcs].scroll_frags),
     }
-    currentBiomeData[bcs].exits.forEach(exit => {
-        createExitButtons(exit)
-    })
-    console.log(spoiles)
+    for (let i = 1; i < route.length; i++) {
+        spoiles.scrolls.power += parseInt(route[i].data[bcs].scrolls.power)
+        spoiles.scrolls.dual += parseInt(route[i].data[bcs].scrolls.dual)
+        spoiles.cursed_chests += route[i].data[bcs].cursed_chests
+        spoiles.scroll_frags += parseInt(route[i].data[bcs].scroll_frags)
+    }
+    return spoiles
+}
+let display_route = () => {
+    console.log("Display Route")
+    let currentBiome
+    if (currentRoute === undefined || currentRoute.length == 0) {
+        currentBiome = get_entry_biome()
+        currentRoute = [currentBiome]
+        createExitButtons(currentBiome)
+        return
+    }
+    console.log(`curr : ${currentRoute[currentRoute.length - 1].name}`)
+    currentBiome = currentRoute[currentRoute.length - 1]
+    let spoiles = calculateRouteSpoiles(currentRoute)
+    console.log(`Spoils : ${JSON.stringify(spoiles)}`)
 }
 
 let disableAllExitButtons = () => {
-
+    exitButtons = document.getElementsByClassName("exit-button")
+    for (let i = 0; i < exitButtons.length; i++) {
+        exitButtons[i].disabled = true
+    }
 }
 let startOver = () => {
-
+    console.log("Start Over")
+    exitButtons = document.getElementsByClassName("exit-button")
+    while (exitButtons[0]) {
+        exitButtons[0].parentNode.removeChild(exitButtons[0])
+    }
+    currentRoute = []
+    startRoute()
 }
 
 let startRoute = () => {
-    currentBiome = get_entry_biome()
-    document.getElementById("start-route").textContent = currentBiome.name
-    currentRoute = [currentBiome]
+    document.getElementById("start-route").textContent = "Start Over"
+    document.getElementById("start-route").onclick = startOver
     display_route()
 }
 
 let continue_route = biome => {
     currentBiome = getBiomeByName(biome.name)
     console.log(`Continuing ${biome.name}`)
-    console.log(`Continuing ${JSON.stringify(currentBiome)}`)
+    disableAllExitButtons()
     currentBiome.data[bcs].exits.forEach(exit => {
         createExitButtons(exit)
     })
+    currentRoute.push(currentBiome)
+    display_route()
 }

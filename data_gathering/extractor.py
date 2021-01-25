@@ -53,10 +53,11 @@ def extract_exits(raw_data):
         return exits
 
     for exit_data in relevant_element.find_all("a"):
-        exits.append({
-            "name": exit_data.text,
-            "path": exit_data.get('href')
-        })
+        if not (exit_data.text == "Giant"):
+            exits.append({
+                "name": exit_data.text,
+                "path": exit_data.get('href')
+            })
     return exits
 
 
@@ -67,7 +68,10 @@ def parse_scroll_data(data):
 
 def extract_scrolls(raw_data):
     relevant_element = extract_by_keyword(raw_data, "scrolls")
-    scrolls = {}
+    scrolls = {
+        "power": "0",
+        "dual": "0"
+    }
     if not relevant_element:
         return scrolls
 
