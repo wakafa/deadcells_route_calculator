@@ -47,8 +47,8 @@ let createExitButtons = exit => {
     document.body.appendChild(eButton)
 }
 
-let calculateRouteSpoiles = route => {
-    let spoiles = {
+let calculateRouteTreasure = route => {
+    let treasure = {
         scrolls: {
             power: parseInt(route[0].data[bcs].scrolls.power),
             dual: parseInt(route[0].data[bcs].scrolls.dual)
@@ -57,26 +57,24 @@ let calculateRouteSpoiles = route => {
         scroll_frags: parseInt(route[0].data[bcs].scroll_frags),
     }
     for (let i = 1; i < route.length; i++) {
-        spoiles.scrolls.power += parseInt(route[i].data[bcs].scrolls.power)
-        spoiles.scrolls.dual += parseInt(route[i].data[bcs].scrolls.dual)
-        spoiles.cursed_chests += route[i].data[bcs].cursed_chests
-        spoiles.scroll_frags += parseInt(route[i].data[bcs].scroll_frags)
+        treasure.scrolls.power += parseInt(route[i].data[bcs].scrolls.power)
+        treasure.scrolls.dual += parseInt(route[i].data[bcs].scrolls.dual)
+        treasure.cursed_chests += route[i].data[bcs].cursed_chests
+        treasure.scroll_frags += parseInt(route[i].data[bcs].scroll_frags)
     }
-    return spoiles
+    return treasure
 }
 let display_route = () => {
     console.log("Display Route")
     let currentBiome
     if (currentRoute === undefined || currentRoute.length == 0) {
         currentBiome = get_entry_biome()
-        currentRoute = [currentBiome]
         createExitButtons(currentBiome)
         return
     }
-    console.log(`curr : ${currentRoute[currentRoute.length - 1].name}`)
     currentBiome = currentRoute[currentRoute.length - 1]
-    let spoiles = calculateRouteSpoiles(currentRoute)
-    console.log(`Spoils : ${JSON.stringify(spoiles)}`)
+    let treasure = calculateRouteTreasure(currentRoute)
+    document.getElementById("treasure-data").textContent = prettyPrintTreasure(treasure)
 }
 
 let disableAllExitButtons = () => {
@@ -110,4 +108,32 @@ let continue_route = biome => {
     })
     currentRoute.push(currentBiome)
     display_route()
+}
+
+let prettyPrintTreasure = treasure => {
+    cursedChestsData = parseCursedChests(treasure.cursed_chests)
+    return `${treasure.scrolls.power} Scrolls of power, ${treasure.scrolls.dual} dual scrolls, ${treasure.scroll_frags} and scroll fragments (${Math.floor(treasure.scroll_frags/4)} extra scrolls)
+    \n in addition, you will encounter ${cursedChestsData}`
+}
+
+let parseCursedChests = cursedChestString => {
+    let givenChests = (cursedChestString.match(/100%/g) || []).length
+    givenChests += (cursedChestString.match(/110%/g) || []).length
+    cursedChestString = cursedChestString.replaceAll('100%', '')
+    cursedChestString = cursedChestString.replaceAll('110%', '10%')
+    chancesArr = cursedChestString.split("%")
+    chancesArr.splice(-1, 1)
+    optionalChests = chancesArr.filter(c => c != 0).length
+    return `${givenChests} guaranteed cursed chests, with ${calculateChestsChance(chancesArr)} to get ${optionalChests} more cursed chests`
+}
+
+let calculateChestsChance = chancesArray => {
+    let chanceMultiplier = (currChance, nextChestChance) => {
+        if (nextChestChance == 0) {
+            return currChance
+        }
+        return currChance * (nextChestChance / 100)
+    }
+
+    return chancesArray.reduce(chanceMultiplier, 1)
 }
