@@ -37,7 +37,12 @@ let get_entry_biome = () => {
 }
 
 let createExitButtons = exit => {
-    if (getBiomeByName(exit.name).spoiler && !showSpoilers) return
+    let sel = document.getElementById("bcs")
+    let spoilersBCS = sel.options[sel.selectedIndex].text
+    if (getBiomeByName(exit.name).spoiler && (!showSpoilers || spoilersBCS != 5)) {
+        console.log("Skiopping : " + exit.name)
+        return
+    }
     let eButton = document.createElement("BUTTON")
     let eText = document.createTextNode(exit.name)
     eButton.appendChild(eText)
@@ -45,6 +50,7 @@ let createExitButtons = exit => {
     eButton.className = "exit-button"
         // eButton.disabled = true
     document.body.appendChild(eButton)
+    return eButton
 }
 
 let calculateRouteTreasure = route => {
@@ -89,7 +95,12 @@ let startOver = () => {
     while (exitButtons[0]) {
         exitButtons[0].parentNode.removeChild(exitButtons[0])
     }
+    nextPaths = document.getElementsByClassName("next-path")
+    while (nextPaths[0]) {
+        nextPaths[0].parentNode.removeChild(nextPaths[0])
+    }
     currentRoute = []
+    document.getElementById("treasure-data").textContent = null
     startRoute()
 }
 
@@ -103,16 +114,19 @@ let continue_route = biome => {
     currentBiome = getBiomeByName(biome.name)
     console.log(`Continuing ${biome.name}`)
     disableAllExitButtons()
+    let nextPath = document.createElement("div")
+    nextPath.className = "next-path"
     currentBiome.data[bcs].exits.forEach(exit => {
-        createExitButtons(exit)
+        nextPath.appendChild(createExitButtons(exit))
     })
+    document.body.appendChild(nextPath)
     currentRoute.push(currentBiome)
     display_route()
 }
 
 let prettyPrintTreasure = treasure => {
     cursedChestsData = parseCursedChests(treasure.cursed_chests)
-    return `${treasure.scrolls.power} Scrolls of power, ${treasure.scrolls.dual} dual scrolls, ${treasure.scroll_frags} and scroll fragments (${Math.floor(treasure.scroll_frags/4)} extra scrolls)
+    return `${treasure.scrolls.power} Scrolls of power, ${treasure.scrolls.dual} dual scrolls, ${treasure.scroll_frags} and scroll fragments (${Math.floor(treasure.scroll_frags / 4)} extra scrolls)
     \n in addition, you will encounter ${cursedChestsData}`
 }
 

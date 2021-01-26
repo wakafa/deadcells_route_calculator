@@ -3,9 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Sample Site</title>
+    <title>Dead Cells Route Calculater</title>
 
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles/welcome.css">
     <style>
         body {
             padding-top: 50px;
@@ -14,30 +14,38 @@
 </head>
 
 <body>
-    <script type="text/javascript" src="welcome.js"></script>
+    <script type="text/javascript" src="/scripts/welcome.js"></script>
     <div class="container">
         <div class="jumbotron">
             <h1>Welcome to Dead Cells Route Calculator!</h1>
         </div>
     </div>
-    <label for="bcs">BCs:</label>
-
-    <select name="bcs" id="bcs" onchange="setBcs()">
-    <option value="0">0</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="4">5</option>
-    </select>
 
     <button id="spoilers-button" onclick="toggleSpoilers()">Spoilers free</button>
+
+    <div class="bcs">
+        <figure>
+            <img src="/images/Boss_Stem_Cell.png" height="30" width="30">
+            <!-- <img src="tiquet.png" height="150" width="90"> -->
+            <label for="bcs">BCs:</label>
+            <select name="bcs" id="bcs" onchange="setBcs()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="4">5</option>
+        </figure>
+
+    </select>
+    </div>
+
 
     <div>
         <button id="start-route" onclick="startRoute()">Lets start</button>
     </div>
 
-    <div>
+    <div class="treasure-data-header">
         <h3>Spoils of War: </h3>
         <h2 id="treasure-data"></h2>
     </div>

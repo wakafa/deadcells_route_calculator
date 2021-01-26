@@ -40,7 +40,6 @@ app.get('/biomes_list', (req, res) => {
     res.send(this.biomesList)
 })
 
-app.use(express.static(path.join(__dirname, 'scripts')))
-    // app.use(express.static(path.join(__dirname)))
+app.use(express.static(path.join(__dirname)))
 app.listen(port, () => console.log(`Example app listening on port 
 ${port}!`))
