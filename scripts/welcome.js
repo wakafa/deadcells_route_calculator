@@ -97,8 +97,6 @@ let display_route = () => {
 let disableSkippedButtons = () => {
     let paths = document.getElementsByClassName("next-path")
     console.log(paths)
-        // let x = document.querySelectorAll('.next-path .exit-button')
-        // console.log(x)
     for (let i = 0; i < paths.length; i++) {
         ebuttons = paths[i].getElementsByClassName("exit-button")
         for (let j = 0; j < ebuttons.length; j++) {
@@ -150,11 +148,11 @@ let continue_route = biome => {
 
 let prettyPrintTreasure = treasure => {
     treasureP = document.createElement("p")
+
     scrollImg = document.createElement("img")
     scrollImg.src = "/images/scroll_of_power.png"
     scrollText = document.createTextNode(` X ${treasure.scrolls.power} `)
-    space = document.createTextNode(",")
-    space.className = "space"
+
     assassinScrollImg = document.createElement("img")
     assassinScrollImg.src = "/images/assassins_scroll.png"
     guardianScrollImage = document.createElement("img")
@@ -163,14 +161,25 @@ let prettyPrintTreasure = treasure => {
     minotaurScrollImg.src = "/images/minotaurs_scroll.png"
     dualText = document.createTextNode(` X ${treasure.scrolls.dual}`)
 
+    scrollFragsImg = document.createElement("img")
+    scrollFragsImg.src = "images/scroll_fragments.png"
+    scrollFragsText = document.createTextNode(` X ${treasure.scroll_frags} (${Math.floor(treasure.scroll_frags / 4)} extra scrolls) `)
+
+    cursedChestsText = document.createTextNode(parseCursedChests(treasure.cursed_chests))
 
     treasureP.appendChild(scrollImg)
     treasureP.appendChild(scrollText)
-    treasureP.appendChild(space)
+    treasureP.appendChild(getSpaceTextNode())
     treasureP.appendChild(assassinScrollImg)
     treasureP.appendChild(guardianScrollImage)
     treasureP.appendChild(minotaurScrollImg)
     treasureP.appendChild(dualText)
+    treasureP.appendChild(getSpaceTextNode())
+    treasureP.appendChild(scrollFragsImg)
+    treasureP.appendChild(scrollFragsText)
+    treasureP.appendChild(getSpaceTextNode())
+    treasureP.appendChild(cursedChestsText)
+
 
     return treasureP
         // cursedChestsData = parseCursedChests(treasure.cursed_chests)
@@ -215,4 +224,10 @@ let removeAllElementChildren = elm => {
     while (elm.firstChild) {
         elm.removeChild(elm.lastChild)
     }
+}
+
+let getSpaceTextNode = _ => {
+    let space = document.createTextNode(",")
+    space.className = "space"
+    return space
 }

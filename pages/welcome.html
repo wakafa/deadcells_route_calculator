@@ -16,35 +16,38 @@
 <body>
     <script type="text/javascript" src="/scripts/welcome.js"></script>
     <div class="container">
-        <div class="jumbotron">
+        <div>
             <h1>Welcome to Dead Cells Route Calculator!</h1>
         </div>
+
     </div>
 
-    <div class="spoilers-button">
-        <button id="spoilers-button" onclick="toggleSpoilers()">Spoilers free</button>
-    </div>
+    <div class="settings">
+        <div class="spoilers-button">
+            <button id="spoilers-button" onclick="toggleSpoilers()">Spoilers free</button>
+        </div>
 
-    <div class="bcs">
-        <figure>
-            <img src="/images/Boss_Stem_Cell.png" height="30" width="30">
-            <!-- <img src="tiquet.png" height="150" width="90"> -->
-            <label for="bcs">BCs:</label>
-            <select name="bcs" id="bcs" onchange="setBcs()">
+
+        <div class="bcs">
+            <figure>
+                <img src="/images/Boss_Stem_Cell.png" height="30" width="30">
+                <label for="bcs">BCs:</label>
+                <select name="bcs" id="bcs" onchange="setBcs()">
                 <option value="0">0</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
                 <option value="4">5</option>
-        </figure>
+                </select>
+            </figure>
 
-    </select>
-    </div>
+        </div>
 
+        <div>
+            <button id="start-route" onclick="startRoute()">Lets start</button>
+        </div>
 
-    <div>
-        <button id="start-route" onclick="startRoute()">Lets start</button>
     </div>
 
     <div class="treasure-data-header">
