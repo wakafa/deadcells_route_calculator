@@ -20,10 +20,14 @@ let toggleSpoilers = () => {
     var spoilersButton = document.getElementById("spoilers-button")
     if (!showSpoilers) {
         spoilersButton.textContent = "Spoilers warning!"
+        spoilersButton.style.backgroundColor = "red"
+        spoilersButton.style.color = "black"
         showSpoilers = true
     } else {
         spoilersButton.textContent = "Spoilers free"
         showSpoilers = false
+        spoilersButton.style.backgroundColor = "darkgreen"
+        spoilersButton.style.color = "white"
     }
 }
 
@@ -40,15 +44,16 @@ let createExitButtons = exit => {
     let sel = document.getElementById("bcs")
     let spoilersBCS = sel.options[sel.selectedIndex].text
     if (getBiomeByName(exit.name).spoiler && (!showSpoilers || spoilersBCS != 5)) {
-        console.log("Skiopping : " + exit.name)
+        console.log("Skipping : " + exit.name)
         return
     }
     let eButton = document.createElement("BUTTON")
+    let exitBiome = getBiomeByName(exit.name)
+    eButton.style.backgroundColor = exitBiome.pack.color
     let eText = document.createTextNode(exit.name)
     eButton.appendChild(eText)
     eButton.onclick = continue_route.bind(this, exit)
     eButton.className = "exit-button"
-        // eButton.disabled = true
     document.body.appendChild(eButton)
     return eButton
 }
@@ -75,19 +80,37 @@ let display_route = () => {
     let currentBiome
     if (currentRoute === undefined || currentRoute.length == 0) {
         currentBiome = get_entry_biome()
-        createExitButtons(currentBiome)
+        let nextPath = document.createElement("div")
+        nextPath.className = "next-path"
+        nextPath.appendChild(createExitButtons(currentBiome))
+        document.body.appendChild(nextPath)
         return
     }
     currentBiome = currentRoute[currentRoute.length - 1]
     let treasure = calculateRouteTreasure(currentRoute)
-    document.getElementById("treasure-data").textContent = prettyPrintTreasure(treasure)
+    let treasureElement = document.getElementById("treasure-data")
+    removeAllElementChildren(treasureElement)
+    treasureElement.appendChild(prettyPrintTreasure(treasure))
+        // document.getElementById("treasure-data").textContent = prettyPrintTreasure(treasure)
 }
 
-let disableAllExitButtons = () => {
-    exitButtons = document.getElementsByClassName("exit-button")
-    for (let i = 0; i < exitButtons.length; i++) {
-        exitButtons[i].disabled = true
+let disableSkippedButtons = () => {
+    let paths = document.getElementsByClassName("next-path")
+    console.log(paths)
+        // let x = document.querySelectorAll('.next-path .exit-button')
+        // console.log(x)
+    for (let i = 0; i < paths.length; i++) {
+        ebuttons = paths[i].getElementsByClassName("exit-button")
+        for (let j = 0; j < ebuttons.length; j++) {
+            highlightOrDisable(ebuttons[j])
+        }
     }
+    // exitButtons = document.getElementsByClassName("exit-button")
+    // for (let i = 0; i < exitButtons.length; i++) {
+    //     highlightOrDisable(exitButtons[i])
+    //         // exitButtons[i].disabled = true
+    //         // exitButtons[i].style.backgroundColor = "gray"
+    // }
 }
 let startOver = () => {
     console.log("Start Over")
@@ -112,22 +135,47 @@ let startRoute = () => {
 
 let continue_route = biome => {
     currentBiome = getBiomeByName(biome.name)
+    currentRoute.push(currentBiome)
     console.log(`Continuing ${biome.name}`)
-    disableAllExitButtons()
+    disableSkippedButtons()
     let nextPath = document.createElement("div")
     nextPath.className = "next-path"
     currentBiome.data[bcs].exits.forEach(exit => {
         nextPath.appendChild(createExitButtons(exit))
     })
     document.body.appendChild(nextPath)
-    currentRoute.push(currentBiome)
+        // currentRoute.push(currentBiome)
     display_route()
 }
 
 let prettyPrintTreasure = treasure => {
-    cursedChestsData = parseCursedChests(treasure.cursed_chests)
-    return `${treasure.scrolls.power} Scrolls of power, ${treasure.scrolls.dual} dual scrolls, ${treasure.scroll_frags} and scroll fragments (${Math.floor(treasure.scroll_frags / 4)} extra scrolls)
-    \n in addition, you will encounter ${cursedChestsData}`
+    treasureP = document.createElement("p")
+    scrollImg = document.createElement("img")
+    scrollImg.src = "/images/scroll_of_power.png"
+    scrollText = document.createTextNode(` X ${treasure.scrolls.power} `)
+    space = document.createTextNode(",")
+    space.className = "space"
+    assassinScrollImg = document.createElement("img")
+    assassinScrollImg.src = "/images/assassins_scroll.png"
+    guardianScrollImage = document.createElement("img")
+    guardianScrollImage.src = "/images/guardian_scroll.png"
+    minotaurScrollImg = document.createElement("img")
+    minotaurScrollImg.src = "/images/minotaurs_scroll.png"
+    dualText = document.createTextNode(` X ${treasure.scrolls.dual}`)
+
+
+    treasureP.appendChild(scrollImg)
+    treasureP.appendChild(scrollText)
+    treasureP.appendChild(space)
+    treasureP.appendChild(assassinScrollImg)
+    treasureP.appendChild(guardianScrollImage)
+    treasureP.appendChild(minotaurScrollImg)
+    treasureP.appendChild(dualText)
+
+    return treasureP
+        // cursedChestsData = parseCursedChests(treasure.cursed_chests)
+        // return `${treasure.scrolls.power} Scrolls of power, ${treasure.scrolls.dual} dual scrolls, ${treasure.scroll_frags} and scroll fragments (${Math.floor(treasure.scroll_frags / 4)} extra scrolls)
+        // \n in addition, you will encounter ${cursedChestsData}`
 }
 
 let parseCursedChests = cursedChestString => {
@@ -150,4 +198,21 @@ let calculateChestsChance = chancesArray => {
     }
 
     return chancesArray.reduce(chanceMultiplier, 1)
+}
+
+let highlightOrDisable = button => {
+    routeNames = currentRoute.map(route => route.name)
+    button.disabled = true
+    if (routeNames.indexOf(button.textContent) > -1) {
+        button.style.borderColor = "yellow"
+    } else {
+        button.style.backgroundColor = "gray"
+        button.disabled = true
+    }
+}
+
+let removeAllElementChildren = elm => {
+    while (elm.firstChild) {
+        elm.removeChild(elm.lastChild)
+    }
 }

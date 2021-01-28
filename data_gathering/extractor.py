@@ -12,14 +12,38 @@ def clean_biome_name(raw_name):
     return name
 
 
+def get_biome_pack(raw_name):
+    if 'TBS' in raw_name:
+        return {
+            "name": "TBS",
+            "color": "#13800B"
+        }
+    elif 'RotG' in raw_name:
+        return{
+            "name": "RoTG",
+            "color": "#66E6FF"
+        }
+    elif 'FF' in raw_name:
+        return {
+            "name": "FF",
+            "color": "yellow"
+        }
+    return {
+        "name": "classic",
+        "color": "#00008B"
+    }
+
+
 def extract_biomes_names_and_paths(raw_biomes: list):
     biomes = []
     for biome in raw_biomes:
         biome_link = biome.find('a')
         if biome_link:
+            biome_pack = get_biome_pack(biome.get('id'))
             new_biome = {
                 "name": clean_biome_name(biome.get('id')),
-                "path": biome_link['href']
+                "path": biome_link['href'],
+                "pack": biome_pack
             }
             biomes.append(new_biome)
     return biomes
