@@ -91,24 +91,16 @@ let display_route = () => {
     let treasureElement = document.getElementById("treasure-data")
     removeAllElementChildren(treasureElement)
     treasureElement.appendChild(prettyPrintTreasure(treasure))
-        // document.getElementById("treasure-data").textContent = prettyPrintTreasure(treasure)
 }
 
 let disableSkippedButtons = () => {
     let paths = document.getElementsByClassName("next-path")
-    console.log(paths)
     for (let i = 0; i < paths.length; i++) {
         ebuttons = paths[i].getElementsByClassName("exit-button")
         for (let j = 0; j < ebuttons.length; j++) {
             highlightOrDisable(ebuttons[j])
         }
     }
-    // exitButtons = document.getElementsByClassName("exit-button")
-    // for (let i = 0; i < exitButtons.length; i++) {
-    //     highlightOrDisable(exitButtons[i])
-    //         // exitButtons[i].disabled = true
-    //         // exitButtons[i].style.backgroundColor = "gray"
-    // }
 }
 let startOver = () => {
     console.log("Start Over")
@@ -142,7 +134,6 @@ let continue_route = biome => {
         nextPath.appendChild(createExitButtons(exit))
     })
     document.body.appendChild(nextPath)
-        // currentRoute.push(currentBiome)
     display_route()
 }
 
@@ -165,6 +156,8 @@ let prettyPrintTreasure = treasure => {
     scrollFragsImg.src = "images/scroll_fragments.png"
     scrollFragsText = document.createTextNode(` X ${treasure.scroll_frags} (${Math.floor(treasure.scroll_frags / 4)} extra scrolls) `)
 
+    cursedChestsImg = document.createElement("img")
+    cursedChestsImg.src = "/images/cursed_chest.png"
     cursedChestsText = document.createTextNode(parseCursedChests(treasure.cursed_chests))
 
     treasureP.appendChild(scrollImg)
@@ -178,13 +171,13 @@ let prettyPrintTreasure = treasure => {
     treasureP.appendChild(scrollFragsImg)
     treasureP.appendChild(scrollFragsText)
     treasureP.appendChild(getSpaceTextNode())
+    treasureP.appendChild(cursedChestsImg)
     treasureP.appendChild(cursedChestsText)
+
+    treasureP.style.fontSize = "x-large"
 
 
     return treasureP
-        // cursedChestsData = parseCursedChests(treasure.cursed_chests)
-        // return `${treasure.scrolls.power} Scrolls of power, ${treasure.scrolls.dual} dual scrolls, ${treasure.scroll_frags} and scroll fragments (${Math.floor(treasure.scroll_frags / 4)} extra scrolls)
-        // \n in addition, you will encounter ${cursedChestsData}`
 }
 
 let parseCursedChests = cursedChestString => {
@@ -195,7 +188,7 @@ let parseCursedChests = cursedChestString => {
     chancesArr = cursedChestString.split("%")
     chancesArr.splice(-1, 1)
     optionalChests = chancesArr.filter(c => c != 0).length
-    return `${givenChests} guaranteed cursed chests, with ${calculateChestsChance(chancesArr)} to get ${optionalChests} more cursed chests`
+    return ` X ${givenChests}, with ${calculateChestsChance(chancesArr)}% chance to get ${optionalChests} more`
 }
 
 let calculateChestsChance = chancesArray => {
@@ -206,7 +199,7 @@ let calculateChestsChance = chancesArray => {
         return currChance * (nextChestChance / 100)
     }
 
-    return chancesArray.reduce(chanceMultiplier, 1)
+    return (100 * chancesArray.reduce(chanceMultiplier, 1)).toFixed(7)
 }
 
 let highlightOrDisable = button => {

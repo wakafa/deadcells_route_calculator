@@ -97,11 +97,15 @@ h1 {
 
 .treasure-data-header {
     position: relative;
+    /* -webkit-text-stroke: 0.1px yellow;
+    /* width and color */
+    /* font-family: sans; */
+    /* color: black; */
+    /* */
 }
 
 .settings div {
     position: relative;
     display: inline-block;
     text-align: center;
-    /* white-space: nowrap; */
 }
