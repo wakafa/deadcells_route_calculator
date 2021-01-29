@@ -76,7 +76,6 @@ let calculateRouteTreasure = route => {
     return treasure
 }
 let display_route = () => {
-    console.log("Display Route")
     let currentBiome
     if (currentRoute === undefined || currentRoute.length == 0) {
         currentBiome = get_entry_biome()
@@ -103,7 +102,6 @@ let disableSkippedButtons = () => {
     }
 }
 let startOver = () => {
-    console.log("Start Over")
     exitButtons = document.getElementsByClassName("exit-button")
     while (exitButtons[0]) {
         exitButtons[0].parentNode.removeChild(exitButtons[0])
@@ -126,7 +124,6 @@ let startRoute = () => {
 let continue_route = biome => {
     currentBiome = getBiomeByName(biome.name)
     currentRoute.push(currentBiome)
-    console.log(`Continuing ${biome.name}`)
     disableSkippedButtons()
     let nextPath = document.createElement("div")
     nextPath.className = "next-path"
