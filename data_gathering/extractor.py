@@ -16,7 +16,7 @@ def get_biome_pack(raw_name):
     if 'TBS' in raw_name:
         return {
             "name": "TBS",
-            "color": "#00FF00"
+            "color": "#99e699"
         }
     elif 'RotG' in raw_name:
         return{
@@ -30,7 +30,7 @@ def get_biome_pack(raw_name):
         }
     return {
         "name": "classic",
-        "color": "#00008B"
+        "color": "#66b3ff"
     }
 
 

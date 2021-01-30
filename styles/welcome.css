@@ -9,12 +9,18 @@
     bottom: 0px;
     left: 0px;
     scroll-behavior: auto;
-    opacity: 0.75;
+    opacity: 0.3;
 }
 
 h1 {
     position: relative;
     text-align: center;
+    font-family: Cursive;
+}
+
+.container .credits * {
+    position: relative;
+    display: inline-block;
 }
 
 .spoilers-button {
@@ -75,9 +81,10 @@ h1 {
     -moz-appearance: none;
     appearance: none;
     background-color: transparent;
-    border: 2px solid #e74c3c;
+    border: 3px solid black;
     border-radius: 0.6em;
-    color: #e74c3c;
+    /* color: #e74c3c; */
+    color: black;
     cursor: pointer;
     -ms-flex-item-align: center;
     align-self: center;
@@ -90,22 +97,30 @@ h1 {
     text-align: center;
     text-transform: uppercase;
     font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-weight: bold;
     margin-left: 5px;
     margin-right: 5px;
 }
 
 .treasure-data-header {
     position: relative;
-    /* -webkit-text-stroke: 0.1px yellow;
-    /* width and color */
-    /* font-family: sans; */
-    /* color: black; */
-    /* */
+    font-family: Cursive;
+    color: black;
 }
 
 .settings div {
     position: relative;
     display: inline-block;
     text-align: center;
+}
+
+.credits {
+    position: fixed;
+    display: inline-block;
+    bottom: 0%;
+}
+
+.credits * {
+    position: relative;
+    display: inline-block;
 }

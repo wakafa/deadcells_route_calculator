@@ -132,3 +132,9 @@ dmypy.json
 saved_pages/*
 Biomes/*
 node_modules/*
+public/*
+functions/*
+.firebaserc
+.gitignore
+firebase.json
+.firebase/hosting.cHVibGlj.cache

@@ -5,15 +5,12 @@ function httpGet(theUrl) {
     return xmlHttp.responseText;
 }
 
-window.onload = () => {
-    console.log("Welcome!")
-}
-
 let showSpoilers = false
 let bcs = 0
 let biomesList = JSON.parse(httpGet('/biomes_list')).biomes
 let currentBiome
 let currentRoute = []
+
 
 let getBiomeByName = biomeName => biomesList.filter(biome => biome.name === biomeName)[0]
 let toggleSpoilers = () => {
@@ -34,9 +31,11 @@ let toggleSpoilers = () => {
 let setBcs = () => {
     bcsElem = document.getElementById("bcs")
     bcs = bcsElem.value
+    allPossibleRoutes = getAllAvailableRoutes()
+    bestRoute = calculateABestRoute()
 }
 
-let get_entry_biome = () => {
+let getEntryBiome = () => {
     return biomesList.filter(b => b.data[0].entrances.length === 0)[0]
 }
 
@@ -44,7 +43,6 @@ let createExitButtons = exit => {
     let sel = document.getElementById("bcs")
     let spoilersBCS = sel.options[sel.selectedIndex].text
     if (getBiomeByName(exit.name).spoiler && (!showSpoilers || spoilersBCS != 5)) {
-        console.log("Skipping : " + exit.name)
         return
     }
     let eButton = document.createElement("BUTTON")
@@ -52,7 +50,7 @@ let createExitButtons = exit => {
     eButton.style.backgroundColor = exitBiome.pack.color
     let eText = document.createTextNode(exit.name)
     eButton.appendChild(eText)
-    eButton.onclick = continue_route.bind(this, exit)
+    eButton.onclick = continueRoute.bind(this, exit)
     eButton.className = "exit-button"
     document.body.appendChild(eButton)
     return eButton
@@ -78,7 +76,7 @@ let calculateRouteTreasure = route => {
 let display_route = () => {
     let currentBiome
     if (currentRoute === undefined || currentRoute.length == 0) {
-        currentBiome = get_entry_biome()
+        currentBiome = getEntryBiome()
         let nextPath = document.createElement("div")
         nextPath.className = "next-path"
         nextPath.appendChild(createExitButtons(currentBiome))
@@ -121,14 +119,17 @@ let startRoute = () => {
     display_route()
 }
 
-let continue_route = biome => {
+let continueRoute = biome => {
     currentBiome = getBiomeByName(biome.name)
     currentRoute.push(currentBiome)
     disableSkippedButtons()
     let nextPath = document.createElement("div")
     nextPath.className = "next-path"
     currentBiome.data[bcs].exits.forEach(exit => {
-        nextPath.appendChild(createExitButtons(exit))
+        let button = createExitButtons(exit)
+        if (button) {
+            nextPath.appendChild(button)
+        }
     })
     document.body.appendChild(nextPath)
     display_route()
@@ -203,9 +204,11 @@ let highlightOrDisable = button => {
     routeNames = currentRoute.map(route => route.name)
     button.disabled = true
     if (routeNames.indexOf(button.textContent) > -1) {
-        button.style.borderColor = "yellow"
+        button.style.borderColor = "black"
     } else {
-        button.style.backgroundColor = "gray"
+        button.style.backgroundColor = "#e6e6e6"
+        button.style.borderColor = "transparent"
+        button.style.color = "rgba(0,0,0,0.5)"
         button.disabled = true
     }
 }
@@ -221,3 +224,67 @@ let getSpaceTextNode = _ => {
     space.className = "space"
     return space
 }
+
+let getAllAvailableRoutes = _ => {
+    let entryBiome = getEntryBiome()
+    let routes = [
+        [entryBiome]
+    ]
+    let updatedRoute = true
+    while (updatedRoute) {
+        updatedRoute = false
+        nextIterRoutes = []
+        for (let i = 0; i < routes.length; i++) {
+            let currentRoute = routes[i]
+            let lastStepIndex = currentRoute.length - 1
+            let exits = currentRoute[lastStepIndex].data[bcs].exits
+            if (exits.length > 0) {
+                updatedRoute = true
+                for (let j = 0; j < exits.length; j++) {
+                    currentRoute = currentRoute.concat(getBiomeByName(exits[j].name))
+                    nextIterRoutes.push(currentRoute)
+                    currentRoute = currentRoute.slice(0, -1)
+                }
+            } else {
+                nextIterRoutes.push(currentRoute)
+            }
+        }
+        routes = nextIterRoutes
+    }
+    return routes
+}
+
+let calculateABestRoute = _ => {
+    let bestRouteList = allPossibleRoutes.reduce((prev, curr) => {
+        if (prev.length < 1) {
+            return [curr]
+        } else if (measureRouteTreasure(prev[0]) < measureRouteTreasure(curr)) {
+            return [curr]
+        } else if (measureRouteTreasure(prev[0]) === measureRouteTreasure(curr)) {
+            prev.push(curr)
+            return prev
+        } else {
+            return prev
+        }
+    }, [])
+    randomBestRoute = bestRouteList[Math.floor(Math.random() * bestRouteList.length)];
+    return randomBestRoute
+}
+
+let measureRouteTreasure = route => {
+    let treasure = calculateRouteTreasure(route)
+    let givenChests = (treasure.cursed_chests.match(/100%/g) || []).length
+    givenChests += (treasure.cursed_chests.match(/110%/g) || []).length
+    return treasure.scrolls.power + treasure.scrolls.dual + (treasure.scroll_frags / 4) + givenChests
+}
+
+let displayBestRoute = () => {
+    startOver()
+    for (let i = 0; i < bestRoute.length; i++) {
+        continueRoute(bestRoute[i])
+    }
+    bestRoute = calculateABestRoute()
+}
+
+let allPossibleRoutes = getAllAvailableRoutes()
+let bestRoute = calculateABestRoute()
