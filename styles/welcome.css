@@ -15,7 +15,7 @@
 h1 {
     position: relative;
     text-align: center;
-    font-family: Cursive;
+    /* font-family: Cursive; */
 }
 
 .container .credits * {
@@ -104,7 +104,7 @@ h1 {
 
 .treasure-data-header {
     position: relative;
-    font-family: Cursive;
+    /* font-family: Cursive; */
     color: black;
 }
 
