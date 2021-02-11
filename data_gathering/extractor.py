@@ -2,6 +2,9 @@ import soup_utils as utils
 import re
 
 
+TBS_BIOMES = ["Dilapidated Arboretum", "Morass of the Banished", "Nest"]
+ROTG_BIOMES = ["Cavern", "Guardian's Haven"]
+FF_BIOMES = ["Undying Shores", "Fractured Shrines", "Mausoleum"]
 def clean_biome_name(raw_name):
     name = raw_name.replace("_", ' ')
     name = name.replace(".27", "'")
@@ -14,17 +17,17 @@ def clean_biome_name(raw_name):
 
 
 def get_biome_pack(raw_name):
-    if 'TBS' in raw_name:
+    if raw_name in TBS_BIOMES:
         return {
             "name": "TBS",
             "color": "rgb(153, 230, 153)"
         }
-    elif 'RotG' in raw_name:
+    elif raw_name in ROTG_BIOMES:
         return{
             "name": "RoTG",
             "color": "rgb(102, 230, 255)"
         }
-    elif 'FF' in raw_name:
+    elif raw_name in FF_BIOMES:
         return {
             "name": "FF",
             "color": "yellow"
@@ -40,10 +43,12 @@ def extract_biomes_names_and_paths(raw_biomes: list):
     for biome in raw_biomes:
         biome_link = biome.find('a')
         if biome_link:
-            biome_pack = get_biome_pack(biome.get('id'))
+            biome_name = biome_link['title']
+            biome_path = biome_link['href']
+            biome_pack = get_biome_pack(biome_name)
             new_biome = {
-                "name": clean_biome_name(biome.get('id')),
-                "path": biome_link['href'],
+                "name": biome_name,
+                "path": biome_path,
                 "pack": biome_pack
             }
             biomes.append(new_biome)

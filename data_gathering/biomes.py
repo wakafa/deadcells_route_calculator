@@ -6,6 +6,7 @@ import soup_utils as utils
 from extractor import *
 # from bs4 import BeautifulSoup
 
+SPOILER_BIOMES_STYLE="background: none; margin: 0; overflow: hidden; padding-top: .5em; padding-bottom: .17em; font-size: 1.2em; font-weight: bold; margin-top: 0.3em; margin-bottom: 0; page-break-after: avoid; color: #D1394E;"
 SAVED_PAGES_DIRNAME = "saved_pages"
 BASE_URL = "https://deadcells.gamepedia.com"
 BIOMES_URL = "https://deadcells.gamepedia.com/Biomes"
@@ -58,7 +59,10 @@ def get_all_biomes():
         logger.error(f'Error while downloading {BIOMES_URL} : {exception}')
     soup = utils.make_file_soup(LOCAL_BIOMES_PAGE)
     raw_biomes_titles = soup.find_all("span", {"class": "mw-headline"})
+    raw_spoiler_biomes = soup.find_all("div", {"style" : SPOILER_BIOMES_STYLE})
     biomes = extract_biomes_names_and_paths(raw_biomes_titles)
+    spoiler_biomes = extract_biomes_names_and_paths(raw_spoiler_biomes)
+    biomes = biomes + spoiler_biomes
     update_spoiler_biomes(biomes)
     update_inaccessible_biomes(biomes)
     for biome in biomes:
