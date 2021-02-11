@@ -9,6 +9,7 @@ def clean_biome_name(raw_name):
     name = name.replace("Final Boss: ", '')
     name = name.replace("TBS", "")
     name = name.replace("RotG", "")
+    name = name.replace("FF", "")
     return name
 
 
