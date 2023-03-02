@@ -43,18 +43,38 @@ h1 {
     position: relative;
 }
 
+.lock-biomes-button {
+    display: inline-block;
+    text-align: center;
+}
+
+#lock-biomes-button {
+    display: inline-block;
+    padding: 0.2em 1.45em;
+    margin: auto;
+    border: 0.15em solid #CCCCCC;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
+    font-weight: 400;
+    color: white;
+    background-color: darkgreen;
+    text-align: center;
+    position: relative;
+}
+
 #spoilers-button:hover {
     border-color: #7a7a7a;
 }
 
-@media all and (max-width:30em) {
+@media all and (max-width: 30em) {
     #spoilers-button {
         display: block;
         margin: 0.2em auto;
     }
 }
 
-#start-route {
+.panel-button {
     display: inline-block;
     padding: 0.35em 1.2em;
     border: 0.1em solid #FFFFFF;
@@ -69,15 +89,17 @@ h1 {
     transition: all 0.2s;
 }
 
-@media all and (min-width:960px) and (max-width: 1024px) {
+@media all and (min-width: 960px) and (max-width: 1024px) {
     button {
         min-width: 150px;
         min-height: 150px;
     }
+
     figure {
         min-width: 150px;
         min-height: 150px;
     }
+
     * {
         font-size: x-large;
     }

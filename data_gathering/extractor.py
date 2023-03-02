@@ -1,10 +1,12 @@
 import soup_utils as utils
 import re
 
-
 TBS_BIOMES = ["Dilapidated Arboretum", "Morass of the Banished", "Nest"]
 ROTG_BIOMES = ["Cavern", "Guardian's Haven"]
 FF_BIOMES = ["Undying Shores", "Fractured Shrines", "Mausoleum"]
+QATS_BIOMES = ["The Crown", "Infested Shipwreck", "Lighthouse"]
+
+
 def clean_biome_name(raw_name):
     name = raw_name.replace("_", ' ')
     name = name.replace(".27", "'")
@@ -23,7 +25,7 @@ def get_biome_pack(raw_name):
             "color": "rgb(153, 230, 153)"
         }
     elif raw_name in ROTG_BIOMES:
-        return{
+        return {
             "name": "RoTG",
             "color": "rgb(102, 230, 255)"
         }
@@ -32,10 +34,16 @@ def get_biome_pack(raw_name):
             "name": "FF",
             "color": "yellow"
         }
-    return {
-        "name": "classic",
-        "color": "rgb(102, 179, 255)"
-    }
+    elif raw_name in QATS_BIOMES:
+        return {
+            "name": "QATS",
+            "color": "purple"
+        }
+    else:
+        return {
+            "name": "classic",
+            "color": "rgb(102, 179, 255)"
+        }
 
 
 def extract_biomes_names_and_paths(raw_biomes: list):
@@ -106,7 +114,7 @@ def extract_scrolls(raw_data):
         return scrolls
 
     power, dual = parse_scroll_data(relevant_element.div.text)
-    return{
+    return {
         "power": power,
         "dual": dual
     }

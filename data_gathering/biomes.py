@@ -4,18 +4,19 @@ import re
 from logger import logger
 import soup_utils as utils
 from extractor import *
+
 # from bs4 import BeautifulSoup
 
-SPOILER_BIOMES_STYLE="background: none; margin: 0; overflow: hidden; padding-top: .5em; padding-bottom: .17em; font-size: 1.2em; font-weight: bold; margin-top: 0.3em; margin-bottom: 0; page-break-after: avoid; color: #D1394E;"
+SPOILER_BIOMES_STYLE = "background: none; margin: 0; overflow: hidden; padding-top: .5em; padding-bottom: .17em; font-size: 1.2em; font-weight: bold; margin-top: 0.3em; margin-bottom: 0; page-break-after: avoid; color: #D1394E;"
 SAVED_PAGES_DIRNAME = "saved_pages"
-BASE_URL = "https://deadcells.gamepedia.com"
-BIOMES_URL = "https://deadcells.gamepedia.com/Biomes"
+# BASE_URL = "https://deadcells.gamepedia.com"
+BASE_URL = "https://deadcells.wiki.gg/wiki"
+# BIOMES_URL = "https://deadcells.gamepedia.com/Biomes"
+BIOMES_URL = "https://deadcells.wiki.gg/wiki/Biomes"
 LOCAL_BIOMES_PAGE = os.path.join(SAVED_PAGES_DIRNAME, "Biomes.html")
 SPOILER_BIOMES = ['Astrolab', 'Observatory']
 UNUSED_BIOMES = ['Repository of the Architects', 'Pier']
 MAX_BC = 5
-
-
 
 
 def update_spoiler_biomes(biomes: list):
@@ -28,17 +29,16 @@ def update_inaccessible_biomes(biomes: list):
         unused_biome['unused'] = True
 
 
-
-
 def extract_stats_of_bc(raw_data):
-    return{
-        "entrances" : extract_entrances(raw_data),
-        "exits" : extract_exits(raw_data),
+    return {
+        "entrances": extract_entrances(raw_data),
+        "exits": extract_exits(raw_data),
         "scrolls": extract_scrolls(raw_data),
         "scroll_frags": extract_scroll_frags(raw_data),
         "gear_level": extract_gear_level(raw_data),
         "cursed_chests": extract_cursed_chests(raw_data),
     }
+
 
 def update_biome_data(biome):
     biome_url = f'{BASE_URL}{biome.get("path")}'
@@ -59,10 +59,10 @@ def get_all_biomes():
         logger.error(f'Error while downloading {BIOMES_URL} : {exception}')
     soup = utils.make_file_soup(LOCAL_BIOMES_PAGE)
     raw_biomes_titles = soup.find_all("span", {"class": "mw-headline"})
-    raw_spoiler_biomes = soup.find_all("div", {"style" : SPOILER_BIOMES_STYLE})
+    raw_spoiler_biomes = soup.find_all("div", {"style": SPOILER_BIOMES_STYLE})
     biomes = extract_biomes_names_and_paths(raw_biomes_titles)
     spoiler_biomes = extract_biomes_names_and_paths(raw_spoiler_biomes)
-    biomes = biomes + spoiler_biomes
+    print(biomes)
     update_spoiler_biomes(biomes)
     update_inaccessible_biomes(biomes)
     for biome in biomes:

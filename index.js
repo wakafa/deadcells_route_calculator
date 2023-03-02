@@ -1,3 +1,25 @@
+//// Import the functions you need from the SDKs you need
+//const { initializeApp } = require("firebase/app");
+//const { getAnalytics } = require("firebase/analytics");
+//// TODO: Add SDKs for Firebase products that you want to use
+//// https://firebase.google.com/docs/web/setup#available-libraries
+//
+//// Your web app's Firebase configuration
+//// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+//const firebaseConfig = {
+//  apiKey: "AIzaSyCMrS0aaW3ePbSjXNjL7YKzg-KYarf2sQM",
+//  authDomain: "dead-cells-route-calculator.firebaseapp.com",
+//  projectId: "dead-cells-route-calculator",
+//  storageBucket: "dead-cells-route-calculator.appspot.com",
+//  messagingSenderId: "308628283647",
+//  appId: "1:308628283647:web:162a765df0dd0b3fe46cca",
+//  measurementId: "G-85TD9E0RF3"
+//};
+//
+//// Initialize Firebase
+//const firebaseapp = initializeApp(firebaseConfig);
+//const analytics = getAnalytics(firebaseapp);
+
 const express = require('express')
 const { spawn } = require('child_process');
 const path = require('path')
@@ -33,7 +55,7 @@ python.on('close', (code) => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'pages', 'welcome.html'))
+    res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
 
 app.get('/biomes_list', (req, res) => {
@@ -41,5 +63,5 @@ app.get('/biomes_list', (req, res) => {
 })
 
 app.use(express.static(path.join(__dirname)))
-app.listen(port, () => console.log(`Example app listening on port 
+app.listen(port, () => console.log(`Example app listening on port
 ${port}!`))
