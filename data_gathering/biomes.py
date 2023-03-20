@@ -10,7 +10,7 @@ from extractor import *
 SPOILER_BIOMES_STYLE = "background: none; margin: 0; overflow: hidden; padding-top: .5em; padding-bottom: .17em; font-size: 1.2em; font-weight: bold; margin-top: 0.3em; margin-bottom: 0; page-break-after: avoid; color: #D1394E;"
 SAVED_PAGES_DIRNAME = "saved_pages"
 # BASE_URL = "https://deadcells.gamepedia.com"
-BASE_URL = "https://deadcells.wiki.gg/wiki"
+BASE_URL = "https://deadcells.wiki.gg"
 # BIOMES_URL = "https://deadcells.gamepedia.com/Biomes"
 BIOMES_URL = "https://deadcells.wiki.gg/wiki/Biomes"
 LOCAL_BIOMES_PAGE = os.path.join(SAVED_PAGES_DIRNAME, "Biomes.html")

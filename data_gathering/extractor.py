@@ -5,6 +5,7 @@ TBS_BIOMES = ["Dilapidated Arboretum", "Morass of the Banished", "Nest"]
 ROTG_BIOMES = ["Cavern", "Guardian's Haven"]
 FF_BIOMES = ["Undying Shores", "Fractured Shrines", "Mausoleum"]
 QATS_BIOMES = ["The Crown", "Infested Shipwreck", "Lighthouse"]
+RTC_BIOMES = ["Castle Outskirts","Dracula's Castle","Defiled Necropolis", "Master's Keep"]
 
 
 def clean_biome_name(raw_name):
@@ -38,6 +39,11 @@ def get_biome_pack(raw_name):
         return {
             "name": "QATS",
             "color": "purple"
+        }
+    elif raw_name in RTC_BIOMES:
+        return {
+            "name": "RTC",
+            "color": "red"
         }
     else:
         return {

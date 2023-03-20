@@ -1,5 +1,6 @@
 import os
 from urllib import request
+import requests
 from bs4 import BeautifulSoup
 from logger import logger
 
@@ -11,7 +12,10 @@ def download(url, file_name):
         if os.path.exists(file_name):
             logger.info(f'File exists : {file_name}')
             return
-        request.urlretrieve(url, file_name)
+        res = requests.get(url)
+        with open(file_name, 'wb') as f:
+            f.write(res.content)
+        # request.urlretrieve(url, file_name)
     except IOError as exception:
         logger.error(f'Could not download html : {exception}')
         raise
